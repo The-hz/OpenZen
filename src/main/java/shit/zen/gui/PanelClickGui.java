@@ -144,13 +144,18 @@ extends Screen {
         int panelY = centerY - panelHeight / 2;
         float effectiveAlpha = this.panelAlpha * dup;
         if (effectiveAlpha > 0.005f) {
-            this.drawPanelGlow(guiGraphics, panelX, panelY, partialTicks, effectiveAlpha);
-            this.categoryBar.render(guiGraphics, panelX, panelY, mouseX, mouseY, this.currentScale, effectiveAlpha);
-            this.moduleListPanel.render(guiGraphics, panelX, panelY, mouseX, mouseY, this.getSelectedCategory(), this.currentScale, effectiveAlpha);
-            this.settingsPanel.render(guiGraphics, panelX, panelY, mouseX, mouseY, this.moduleListPanel.getHoveredModule(), this.currentScale, effectiveAlpha);
-            this.profileWidget.render(guiGraphics, panelX, panelY, mouseX, mouseY, this.currentScale, effectiveAlpha);
-            this.drawSearchBar(guiGraphics, panelX, panelY, mouseX, mouseY, effectiveAlpha);
-            this.drawToasts(guiGraphics, panelX, panelY, effectiveAlpha);
+            final float finalAlpha = effectiveAlpha;
+            final int fPanelX = panelX;
+            final int fPanelY = panelY;
+            Renderer.render(guiGraphics, drawContext -> {
+                this.drawPanelGlow(guiGraphics, fPanelX, fPanelY, partialTicks, finalAlpha);
+                this.categoryBar.render(guiGraphics, fPanelX, fPanelY, mouseX, mouseY, this.currentScale, finalAlpha);
+                this.moduleListPanel.render(guiGraphics, fPanelX, fPanelY, mouseX, mouseY, this.getSelectedCategory(), this.currentScale, finalAlpha);
+                this.settingsPanel.render(guiGraphics, fPanelX, fPanelY, mouseX, mouseY, this.moduleListPanel.getHoveredModule(), this.currentScale, finalAlpha);
+                this.profileWidget.render(guiGraphics, fPanelX, fPanelY, mouseX, mouseY, this.currentScale, finalAlpha);
+                this.drawSearchBar(guiGraphics, fPanelX, fPanelY, mouseX, mouseY, finalAlpha);
+                this.drawToasts(guiGraphics, fPanelX, fPanelY, finalAlpha);
+            });
         }
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
         guiGraphics.pose().popPose();
