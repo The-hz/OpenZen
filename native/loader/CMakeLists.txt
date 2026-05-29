@@ -21,6 +21,16 @@ qt_add_executable(OpenZenLoader WIN32
     src/main.cpp
     src/MainWindow.cpp
     src/MainWindow.h
+    src/SplashScreen.cpp
+    src/SplashScreen.h
+    src/TitleBar.cpp
+    src/TitleBar.h
+    src/InstanceList.cpp
+    src/InstanceList.h
+    src/InstanceRow.cpp
+    src/InstanceRow.h
+    src/InjectionOverlay.cpp
+    src/InjectionOverlay.h
     src/process_list.cpp
     src/injector.cpp
     src/manual_map.cpp
@@ -47,7 +57,16 @@ target_link_libraries(OpenZenLoader PRIVATE
     psapi
     shlwapi
     user32
+    dwmapi   # DwmSetWindowAttribute for Win11 rounded corners on frameless window
 )
+
+# Build-time git revision passed in by Gradle (gradle.properties /
+# CI). Stamped into the window title so a built loader can be
+# traced back to its source commit.
+if(DEFINED OPENZEN_BUILD_REVISION AND NOT OPENZEN_BUILD_REVISION STREQUAL "")
+    target_compile_definitions(OpenZenLoader PRIVATE
+        OPENZEN_BUILD_REVISION="${OPENZEN_BUILD_REVISION}")
+endif()
 
 set_target_properties(OpenZenLoader PROPERTIES
     OUTPUT_NAME "OpenZenLoader"
